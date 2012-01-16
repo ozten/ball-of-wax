@@ -1,0 +1,10 @@
+#catalog-p ol.shelf li {
+  float: left;
+  list-style: none;
+  margin: 15px;
+}
+#catalog-p ol.shelf li .cover-thumb {
+  background-color: tan;
+  width: 140px;
+  height: 182px;
+}

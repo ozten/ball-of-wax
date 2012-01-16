@@ -1,0 +1,11 @@
+#volume-p [data-role=content] {
+  background-color: tan;
+}
+#volume-p [data-role=content] div.artist {
+  text-align: center;
+}
+#volume-p [data-role=content] div.artist img {
+  background-color: #AAA;
+  height: 300px;
+  width: 300px;
+}
