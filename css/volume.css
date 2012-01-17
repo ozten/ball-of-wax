@@ -3,14 +3,6 @@
   width: 538px;
   background-color: tan;
 }
-.import-tracks {
-  position: absolute;
-  /*  float: left; */
-
-  margin-left: 60%;
-  margin-top: -30px;
-  width: 30%;
-}
 .import-tracks img {
   background-color: #AAA;
   float: left;
@@ -20,4 +12,10 @@
 }
 div[data-role=content] ol {
   clear: both;
+}
+#track-nav li {
+  list-style: none;
+}
+#track-nav li .active {
+  background-color: white;
 }

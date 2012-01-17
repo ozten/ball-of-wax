@@ -1,5 +1,6 @@
 #volume-p [data-role=content] {
-  background-color: tan;
+  /* background-color: tan; */
+
 }
 #volume-p [data-role=content] div.artist {
   text-align: center;
@@ -7,5 +8,12 @@
 #volume-p [data-role=content] div.artist img {
   background-color: #AAA;
   height: 300px;
+  margin-top: 50px;
   width: 300px;
+}
+#volume-p [data-role=content] #track-nav .active {
+  background-color: white;
+}
+#volume-p [data-role=content] #track-view {
+  background-color: white;
 }
