@@ -105,6 +105,6 @@ Example volume-1.json
     }
 
 * App / Web App
-** Mozilla and Chrome app stores
-** "Install as an App" dialog
-** Not doing iTunes due to obscene 30% tax
+  * Mozilla and Chrome app stores
+  * "Install as an App" dialog
+  * Not doing iTunes due to obscene 30% tax
