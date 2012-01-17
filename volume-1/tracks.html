@@ -15,7 +15,14 @@
   <div data-role="header">
     <a href="" data-rel="back">Cover Artwork</a>
     <h1>Ball of Wax Volume 1</h1>
-    <a href="/licensing/pay.html" data-rel="dialog">Play Album</a>
+    <a href="/licensing/login.html" data-rel="dialog">Login</a>
+    <!-- a class="play-track" href="" data-ajax="false">Play Track</a -->
+    <!-- TODO must be in site wide header -->
+    <div id="jquery_jplayer_1"></div>
+    <div id="jp_interface_1">
+      <a data-ajax="false" href="#" class="jp-play">Play</a>
+      <a data-ajax="false" href="#" class="jp-pause">Pause</a>
+    </div>
   </div><!-- /header -->
 
   <div data-role="content" class="ui-grid-a">
@@ -65,6 +72,10 @@
   <div data-role="footer" data-position="fixed">
     <h4>Ball of Wax Audio Quarterly is Copyright Levi Fuller 2004-2012</h4>
   </div><!-- /footer -->
+<!-- TODO: move this into main layout templates -->
+<!-- TODO: get all CSS into a single file -->
+<script src="https://browserid.org/include.js" type="text/javascript"></script>
+<script src="/lib/jQuery.jPlayer.2.1.0/jquery.jplayer.min.js"></script>
 <script src="/js/bow.js"></script>
 </div><!-- /page -->
 </body>

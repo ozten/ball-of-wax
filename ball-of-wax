@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-var express = require('express');
+var express = require('express'),
     //routes = require('./routes');
-    //browserid = require('connect-browserid'),
+    browserid = require('connect-browserid');
 
 
 var app = module.exports = express.createServer();
@@ -21,8 +21,8 @@ app.configure(function(){
     secret: 'TODO move to config'
   }));
 
-  //app.use(browserid.authUser({ secret: "yabba dabba do",
-  //                             audience: 'http://10.0.1.13:3000' }));
+  app.use(browserid.authUser({ secret: "yabba dabba do",
+                               audience: 'http://10.0.1.16:3099' }));
 
   app.use(app.router);
 
@@ -51,6 +51,10 @@ app.dynamicHelpers({
 // #10 - if nothing else has caught this request, serve static files
 app.use(express.static(__dirname));
 
+app.post('/auth', browserid.auth({ next: '/register' }));
+
+app.get('/logout', browserid.logout({ next: '/' }));
+
 /* app.get('/about', routes.direct('about'));
 //     Profile
 app.get('/register', routes.register);
@@ -65,9 +69,7 @@ app.post('/ask-for-cash', routes.ask_for_cash);
 app.get('/pay/:email/:pay_req_id', routes.pay);
 
 // Auth
-app.post('/auth', browserid.auth({ next: '/register' }));
 
-app.get('/logout', browserid.logout({ next: '/' }));
 */
 // Startup
 app.listen(3099);
