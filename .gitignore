@@ -1,0 +1,6 @@
+config.js
+*.mp3
+*~
+*#*
+node_modules
+log

@@ -6,6 +6,17 @@ $(document).ready(function () {
     if (window.email)
       $('.email-address').text(window.email);
   });
+/*  $('#track-view').live('swipe', function (e, b, c) {
+    alert('swipe ' + b + ' ' + c);
+  });*/
+  $('#track-view').live('swipeleft', function (e, b, c) {
+    //alert('swipeleft ' + b + ' ' + c);
+    $('#track-nav > li.active').next().find('a').click();
+  });
+  $('#track-view').live('swiperight', function (e, b, c) {
+    //alert('swiperight ' + b + ' ' + c);
+    $('#track-nav > li.active').prev().find('a').click();
+  });
 
   // Every page, Play Tracks clicked -> requires log in
   $('.browser-id').live('click', function (e) {
@@ -37,9 +48,9 @@ $(document).ready(function () {
       },
       cssSelectorAncestor: '#jp_interface_1',
       errorAlerts: true,
-      warningAlerts: true,
+      warningAlerts: false,
       swfPath: "/lib/jQuery.jPlayer.2.1.0/",
-      solution: "html",
+      /*solution: "html",*/
       supplied: "mp3"
     });
      

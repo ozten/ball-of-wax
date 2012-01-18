@@ -2,9 +2,34 @@
   float: left;
   list-style: none;
   margin: 15px;
+  /* .bow-cover-thumb */
+
 }
 #catalog-p ol.shelf li .cover-thumb {
   background-color: tan;
   width: 140px;
   height: 182px;
+}
+#catalog-p ol.shelf li .bow-cover-thumb {
+  width: 260px;
+}
+#catalog-p ol.shelf li .bow-cover-thumb img {
+  float: left;
+}
+#catalog-p ol.shelf li .bow-cover-thumb .title {
+  margin-left: 150px;
+  padding-bottom: 5px;
+  float: left;
+}
+#catalog-p ol.shelf li .bow-cover-thumb ol {
+  padding-left: 11px;
+  max-height: 150px;
+  overflow: hidden;
+  float: left;
+}
+#catalog-p ol.shelf li .bow-cover-thumb ol li {
+  display: inline-block;
+  font-size: 10px;
+  margin: 0px;
+  width: 100%;
 }
