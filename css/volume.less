@@ -14,7 +14,7 @@
     height: 30px;
   }
 }
-#volume-p {
+#volume-p, #tracks-p {
   div[data-role=content] {
     background-color: tan;
   }
@@ -29,6 +29,8 @@ div[data-role=content] {
 }
 
 #track-nav {
+
+
   li {
     list-style: none;
 
@@ -42,9 +44,12 @@ div[data-role=content] {
   text-align: center;
   font-family: courier;
   background-color: #FFF;
-
+  h1, .volume-description {
+    font-family: courier, monospaced;
+  }
   h1 {
-    margin-top: 100px;
+    padding-top: 50px;
+    margin-top: 0px;    
     margin-bottom: 0px;
   }
   .volume-description {

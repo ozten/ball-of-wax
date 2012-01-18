@@ -1,0 +1,119 @@
+#catalog-p ol.shelf li {
+  float: left;
+  list-style: none;
+  margin: 15px;
+  /* .bow-cover-thumb */
+
+}
+#catalog-p ol.shelf li .cover-thumb {
+  background-color: tan;
+  width: 140px;
+  height: 182px;
+}
+#catalog-p ol.shelf li .bow-cover-thumb {
+  /* border: solid 1px red;*/
+
+  height: 182px;
+  width: 260px;
+}
+#catalog-p ol.shelf li .bow-cover-thumb img {
+  float: left;
+}
+#catalog-p ol.shelf li .bow-cover-thumb .title {
+  margin-left: 145px;
+  padding-bottom: 5px;
+  /* float: left; */
+
+}
+#catalog-p ol.shelf li .bow-cover-thumb ol {
+  max-height: 150px;
+  overflow: hidden;
+  padding-left: 5px;
+  margin-left: 1px;
+}
+#catalog-p ol.shelf li .bow-cover-thumb ol li {
+  font-size: 10px;
+  margin: 0px;
+  width: 100px;
+  padding-left: 0px;
+}
+#tracks-p [data-role=content] {
+  /* background-color: tan; */
+
+}
+#tracks-p [data-role=content] div.artist {
+  text-align: center;
+}
+#tracks-p [data-role=content] div.artist img {
+  background-color: #AAA;
+  height: 300px;
+  margin-top: 50px;
+  width: 300px;
+}
+#tracks-p [data-role=content] #track-nav {
+  text-align: right;
+  padding-right: 10px;
+}
+#tracks-p [data-role=content] #track-nav .active a {
+  background-color: white;
+}
+#tracks-p [data-role=content] #track-view {
+  font-family: Courier, monospaced;
+  background-color: white;
+  min-height: 500px;
+  padding: 20px;
+}
+.cover {
+  width: 480px;
+  /*  height: 700px;
+
+  background-color: tan;
+*/
+
+}
+.import-tracks img {
+  background-color: #AAA;
+  float: left;
+  margin-right: 10px;
+  width: 30px;
+  height: 30px;
+}
+#volume-p div[data-role=content], #tracks-p div[data-role=content] {
+  background-color: tan;
+}
+div[data-role=content] ol {
+  clear: both;
+}
+#track-nav li {
+  list-style: none;
+}
+#track-nav li .active {
+  background-color: white;
+}
+.insert-page-1 {
+  /* padding-left: 30px; */
+
+  text-align: center;
+  font-family: courier;
+  background-color: #FFF;
+}
+.insert-page-1 h1, .insert-page-1 .volume-description {
+  font-family: courier, monospaced;
+}
+.insert-page-1 h1 {
+  padding-top: 50px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+.insert-page-1 .volume-description {
+  margin-top: 100px;
+  margin-bottom: 30px;
+}
+.insert-page-1 .edited-by {
+  margin-top: 30px;
+  margin-bottom: 0px;
+}
+.insert-page-1 .mastered-by {
+  margin-top: 0px;
+  margin-bottom: 30px;
+}

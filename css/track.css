@@ -11,10 +11,16 @@
   margin-top: 50px;
   width: 300px;
 }
-#tracks-p [data-role=content] #track-nav .active {
+#tracks-p [data-role=content] #track-nav {
+  text-align: right;
+  padding-right: 10px;
+}
+#tracks-p [data-role=content] #track-nav .active a {
   background-color: white;
 }
 #tracks-p [data-role=content] #track-view {
+  font-family: Courier, monospaced;
   background-color: white;
   min-height: 500px;
+  padding: 20px;
 }

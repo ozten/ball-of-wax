@@ -11,25 +11,29 @@
   height: 182px;
 }
 #catalog-p ol.shelf li .bow-cover-thumb {
+  /* border: solid 1px red;*/
+
+  height: 182px;
   width: 260px;
 }
 #catalog-p ol.shelf li .bow-cover-thumb img {
   float: left;
 }
 #catalog-p ol.shelf li .bow-cover-thumb .title {
-  margin-left: 150px;
+  margin-left: 145px;
   padding-bottom: 5px;
-  float: left;
+  /* float: left; */
+
 }
 #catalog-p ol.shelf li .bow-cover-thumb ol {
-  padding-left: 11px;
   max-height: 150px;
   overflow: hidden;
-  float: left;
+  padding-left: 5px;
+  margin-left: 1px;
 }
 #catalog-p ol.shelf li .bow-cover-thumb ol li {
-  display: inline-block;
   font-size: 10px;
   margin: 0px;
-  width: 100%;
+  width: 100px;
+  padding-left: 0px;
 }

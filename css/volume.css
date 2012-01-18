@@ -13,7 +13,7 @@
   width: 30px;
   height: 30px;
 }
-#volume-p div[data-role=content] {
+#volume-p div[data-role=content], #tracks-p div[data-role=content] {
   background-color: tan;
 }
 div[data-role=content] ol {
@@ -32,8 +32,12 @@ div[data-role=content] ol {
   font-family: courier;
   background-color: #FFF;
 }
+.insert-page-1 h1, .insert-page-1 .volume-description {
+  font-family: courier, monospaced;
+}
 .insert-page-1 h1 {
-  margin-top: 100px;
+  padding-top: 50px;
+  margin-top: 0px;
   margin-bottom: 0px;
 }
 .insert-page-1 .volume-description {
