@@ -17,7 +17,8 @@
   background-color: tan;
 }
 div[data-role=content] ol {
-  clear: both;
+  /* clear: both; */
+
 }
 #track-nav li {
   list-style: none;

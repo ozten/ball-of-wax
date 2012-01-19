@@ -20,16 +20,13 @@
   float: left;
 }
 #catalog-p ol.shelf li .bow-cover-thumb .title {
-  margin-left: 145px;
-  padding-bottom: 5px;
   /* float: left; */
 
 }
 #catalog-p ol.shelf li .bow-cover-thumb ol {
   max-height: 150px;
   overflow: hidden;
-  padding-left: 5px;
-  margin-left: 1px;
+  padding-left: 15px;
 }
 #catalog-p ol.shelf li .bow-cover-thumb ol li {
   font-size: 10px;
