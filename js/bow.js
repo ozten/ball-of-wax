@@ -1,4 +1,8 @@
 $(document).ready(function () {
+  window.User = {
+    email: null,    /* Logged in via BrowserID? */
+    hasPayment: true     /* Stripe payment method exists?*/
+  };
   $(document).bind('orientationchange', function (e) {
     $.get('orientationchange');
   });
@@ -66,11 +70,28 @@ $(document).ready(function () {
 
   $('#pay-now-btn').live('click', function (e) {
     e.preventDefault();
-   $('#pay-step1-group').hide();
-   $('#payment-form').show(); 
+    if (User.hasPayment) {
+       // TODO 26 hardcoded
+      $.ajax('/purchase_volume/26', {
+        type: 'POST',
+        dataType: 'json',
+        error: function (data, status, jqXhr) {
+          // TODO
+          alert(data.error);
+        },
+        success: function (data, status, jqXhr) {
+          // TODO
+          dialog.close();
+        }         
+      });
+    } else {
+      $('#pay-step1-group').hide();
+      $('#payment-form').show(); 
+    }
   });
 
-  // stripe
+  /******************************** stripe *******************************/
+  /******* First time, needs payment method */
   $("#payment-form").live('submit', function(event) {
     // disable the submit button to prevent repeated clicks
 
@@ -100,9 +121,14 @@ $(document).ready(function () {
         // insert the token into the form so it gets submitted to the server
         form$.append("<input type='hidden' name='stripeToken' value='" + token + "'/>");
         // and submit
+        //TODO ajax, returning set User.hasPayment = true;
         form$.get(0).submit();
     }
   }
-  // end stripe
+  /******* end First time, needs payment method */
+  /******* returning customer */
+  
+  /******* end returning customer */
+  /************************* end stripe ************************/ 
   $.mobile.changePage('/licensing/pay.html', {role: 'dialog'});
 });

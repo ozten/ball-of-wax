@@ -15,3 +15,11 @@ CREATE TABLE purchased_volumes (
   FOREIGN KEY (user_id) REFERENCES users(id),
   UNIQUE(user_id, volume_id)
 );
+
+DROP TABLE IF EXISTS stripe_customers;
+CREATE TABLE stripe_customers (
+  user_id INTEGER NOT NULL,
+  customer_id VARCHAR(255) NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id),
+  UNIQUE(user_id, customer_id)
+);
