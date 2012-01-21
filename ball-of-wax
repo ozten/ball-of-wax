@@ -3,6 +3,7 @@
 var express = require('express'),
     //routes = require('./routes');
     browserid = require('connect-browserid'),
+    fs = require('fs'),
     mysql = require('mysql'),
     MySQLSessionStore = require('connect-mysql-session')(express)
     path = require('path'),
@@ -16,7 +17,35 @@ var stripe = require('stripe')(conf.stripe_sekrit);
 
 var app = module.exports = express.createServer();
 
-// Configuration
+app.configure('development', function(){
+
+  // Wacky dev only middleware
+  app.use(function (req, resp, next) {
+    resp.local('mode', 'development');
+
+    if (req.path.indexOf('.css') == -1)
+      return next();
+
+    // lessc used with @import don't see changes... 
+    // nuking stylo.css will force a re-compile
+    fs.readdirSync(path.join(__dirname, 'css/')).forEach(function (f, i) {
+      if (f.indexOf('.css') != -1) {
+        console.log("rm ", 'css/' + f);
+        fs.unlinkSync(path.join(__dirname, 'css',  f));
+      }
+    });
+    next();
+  });
+  app.use(express.compiler({ enable: ['less'],
+                             src: __dirname}));
+});
+
+app.configure('production', function(){
+  app.use(function (req, resp, next) {
+    resp.local('mode', 'production');
+    next();
+  });
+});
 
 app.configure(function(){
   app.set('views', __dirname);
@@ -38,9 +67,6 @@ app.configure(function(){
   app.use(browserid.authUser({ secret: conf.browserid_sekrit,
                                audience: conf.browserid_audience }));
   app.use(app.router);
-
-/*  app.use(express.compiler({ enable: ['less'],
-                             src: './css'}));*/
 
   app.use(express.static(__dirname));
 });

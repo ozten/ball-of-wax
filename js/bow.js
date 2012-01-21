@@ -43,12 +43,21 @@ $(document).ready(function () {
     });
   });
 
+  $('.jp-play').click(function (e) {
+    // TODO if we aren't logged in, login
+    // else if we aren't authorized, pay
+    // else setMedia
+  };
+
   // tracks hardcoded play with jplayer
     $("#jquery_jplayer_1").jPlayer({
       ready: function () {
-        $(this).jPlayer("setMedia", {
-          mp3: "/volume-25/01-Landed.mp3"
-        });
+        /* TODO hook up as user navigates the app
+         and we know they can play a track
+
+          $(this).jPlayer("setMedia", {
+          mp3: "/play/volume-25/01_Landed.mp3"
+        }); */
       },
       cssSelectorAncestor: '#jp_interface_1',
 /*      errorAlerts: true,
@@ -57,7 +66,7 @@ $(document).ready(function () {
       /*solution: "html",*/
       supplied: "mp3"
     });
-     
+
   // /:volume/tracks landscape switch pages via navigation
   $('#track-nav li a').click(function (e) {
     e.preventDefault();
@@ -82,13 +91,15 @@ $(document).ready(function () {
         success: function (data, status, jqXhr) {
           // TODO
           dialog.close();
-        }         
+        }
       });
     } else {
       $('#pay-step1-group').hide();
-      $('#payment-form').show(); 
+      $('#payment-form').show();
     }
   });
+
+
 
   /******************************** stripe *******************************/
   /******* First time, needs payment method */
@@ -127,8 +138,8 @@ $(document).ready(function () {
   }
   /******* end First time, needs payment method */
   /******* returning customer */
-  
+
   /******* end returning customer */
-  /************************* end stripe ************************/ 
-  $.mobile.changePage('/licensing/pay.html', {role: 'dialog'});
+  /************************* end stripe ************************/
+  //$.mobile.changePage('/licensing/pay.html', {role: 'dialog'});
 });
