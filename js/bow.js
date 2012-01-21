@@ -47,8 +47,8 @@ $(document).ready(function () {
         });
       },
       cssSelectorAncestor: '#jp_interface_1',
-      errorAlerts: true,
-      warningAlerts: false,
+/*      errorAlerts: true,
+      warningAlerts: false, */
       swfPath: "/lib/jQuery.jPlayer.2.1.0/",
       /*solution: "html",*/
       supplied: "mp3"
@@ -63,4 +63,46 @@ $(document).ready(function () {
     $('#track-view').load(url);
   });
   $('#track-nav li a:first').click();
+
+  $('#pay-now-btn').live('click', function (e) {
+    e.preventDefault();
+   $('#pay-step1-group').hide();
+   $('#payment-form').show(); 
+  });
+
+  // stripe
+  $("#payment-form").live('submit', function(event) {
+    // disable the submit button to prevent repeated clicks
+
+    Stripe.setPublishableKey('pk_iWEPqAvbN0ikmxmfJ99A3uohzegYO');
+    $('.submit-button').attr("disabled", "disabled");
+
+    var amount = 500; //amount you want to charge in cents
+    Stripe.createToken({
+        number: $('.card-number').val(),
+        cvc: $('.card-cvc').val(),
+        exp_month: $('.card-expiry-month').val(),
+        exp_year: $('.card-expiry-year').val()
+    }, amount, stripeResponseHandler);
+
+    // prevent the form from submitting with the default action
+    return false;
+  });
+  function stripeResponseHandler(status, response) {
+    if (response.error) {
+        //show the errors on the form
+        $(".payment-errors").html(response.error.message);
+    } else {
+        var form$ = $("#payment-form");
+        // token contains id, last4, and card type
+        var token = response['id'];
+        console.log('setting up ', token, ' into ', form$);
+        // insert the token into the form so it gets submitted to the server
+        form$.append("<input type='hidden' name='stripeToken' value='" + token + "'/>");
+        // and submit
+        form$.get(0).submit();
+    }
+  }
+  // end stripe
+  $.mobile.changePage('/licensing/pay.html', {role: 'dialog'});
 });

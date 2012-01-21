@@ -1,3 +1,16 @@
+[] Hook up stripe
+* token
+** encodes id, last 4, card type
+[]pay form formatting (CC, expiration, etc size)
+[] record customer id
+[] record purchase
+[] if customer id is on hand, pay now should charge card
+
+[] Figure out Play buttons
+[] Push email address and logged in state into page
+[] Finalize graphic design
+
+
 * Add jPlayer (http://www.jplayer.org/latest/developer-guide/)
 * "Database" will be a set of zip files you email me with:
 

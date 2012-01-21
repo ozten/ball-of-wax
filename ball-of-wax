@@ -2,8 +2,16 @@
 
 var express = require('express'),
     //routes = require('./routes');
-    browserid = require('connect-browserid');
+    browserid = require('connect-browserid'),
+    mysql = require('mysql'),
+    MySQLSessionStore = require('connect-mysql-session')(express)
+    path = require('path'),
 
+    conf = require('./config'),
+    userdb = require('./lib/userdb'),
+    purchasedb = require('./lib/purchases');
+
+var stripe = require('stripe')(conf.stripe_sekrit);
 
 var app = module.exports = express.createServer();
 
@@ -17,7 +25,13 @@ app.configure(function(){
   app.use(express.responseTime());
   app.use(express.methodOverride());
   app.use(express.cookieParser());
+
   app.use(express.session({ 
+    //TODO move to config
+    store: new MySQLSessionStore("ball_of_wax", "root", "pass", {
+        // options...
+      checkExpirationInterval: 1000 * 60 * 60 * 6 // 6 hour session
+    }),
     secret: 'TODO move to config'
   }));
 
@@ -28,7 +42,9 @@ app.configure(function(){
 
   app.use(express.compiler({ enable: ['less'],
                              src: './public'}));
-  app.use(express.static(__dirname + '/public'));
+
+
+  app.use(express.static(__dirname));  
 });
 
 app.configure('development', function(){
@@ -46,31 +62,243 @@ app.dynamicHelpers({
   },
 });
 
-// Routes
-//     Static
-// #10 - if nothing else has caught this request, serve static files
-app.use(express.static(__dirname));
-
 app.post('/auth', browserid.auth({ next: '/register' }));
 
 app.get('/logout', browserid.logout({ next: '/' }));
 
-/* app.get('/about', routes.direct('about'));
-//     Profile
-app.get('/register', routes.register);
-app.post('/register', routes.register);
+/*
+  app.get('/get_user', function (req, resp, next) {
+    var conn = mysql.createClient({
+      user: 'root',
+      password: 'pass',
+    });
 
-//     Cash
-app.get('/recent', routes.recent);
+    conn.useDatabase('ball_of_wax', function (err, db_res) {
+      if (! err) {  
+        userdb.get_user(conn, req.user, function (err, user) {
+          console.log('User=', user);
 
-app.get('/ask-for-cash', routes.ask_for_cash);
-app.post('/ask-for-cash', routes.ask_for_cash);
+            if (true)
+              express.static(__dirname + '/public')(req, resp, next);
+            else
+              next();
 
-app.get('/pay/:email/:pay_req_id', routes.pay);
+        });
+      }
+    });
+  });
+*/
+
+/*
+// protected mp3 streams
+app.get('/xxxplay/volume/:vol/:track', function (req, resp) {
+  if (browserid.enforceLogIn(req, resp) == null) {
+    var conn = mysql.createClient({
+      user: 'root',
+      password: 'pass',
+    });
+
+    conn.useDatabase('ball_of_wax', function (err, db_res) {
+    if (err) {  
+      console.error(err);
+    } else {
+      purchasedb.can_play(conn, req.user, req.params.vol, function (err, canPlay) {
+        if (err) {
+          console.error(err);
+        } else {
+          // stream vol track
+          resp.write(canPlay.toString());
+          resp.end();
+        }
+      });
+    }
+  });
+  }
+});
+*/
+
+app.get('/can/:vol', function (req, resp) {
+
+  var conn = mysql.createClient({
+      user: 'root',
+      password: 'pass',
+  });
+
+  conn.useDatabase('ball_of_wax', function (err, db_res) {
+    if (err) {  
+      console.error(err);
+    } else {
+      purchasedb.can_play(conn, req.user, req.params.vol, function (err, canPlay) {
+        if (err) {
+          console.error(err);
+        } else {
+          console.log('vol=', req.params.vol);
+          console.log('CanPlay=', canPlay);
+          resp.write(canPlay.toString());
+          resp.end();
+        }
+      });
+    }
+  });
+});
+
+app.post('/add-payment-method', function (req, resp) {
+  function create_customer (cb) {
+    var data = { email: req.user, card: req.body['stripeToken'] };
+    console.log(data);
+    stripe.customers.create(data,
+      function (err, customer) {
+        console.log('customer create', err, customer);
+        if (err) {
+          console.log('error', err);
+          //TODO this dies...
+          //throw(err);
+          resp.send(err, 500);
+        } else {
+          console.log('customer info', customer);
+/*
+{ created: 1327129318,
+  email: 'shout@ozten.com',
+  id: 'cus_HCK6Wijfn26KY8',
+  livemode: false,
+  object: 'customer',
+  active_card: 
+   { country: 'US',
+     cvc_check: 'pass',
+     exp_month: 4,
+     exp_year: 2012,
+     last4: '4242',
+     object: 'card',
+     type: 'Visa' } }
+*/
+          buy_volume(customer.id, 25, cb); // TODO should be dynamic
+        }
+      }); // customer create
+  }//create_customer
+  
+  function buy_volume(customer_id, vol_number, cb) {
+    var paydata = {
+      amount: 500,
+      currency: 'usd',
+      customer: customer_id,
+      description: 'Volume ' + vol_number 
+    };
+    // TODO save to db
+    stripe.charges.create(paydata,
+      function (err, charge) {
+        if (err) {
+          console.error(err);
+        } else {
+          console.log('charge info', charge);
+          cb();
+        }
+    });
+  }
+
+    console.log('add-payment-method running');
+    if (browserid.enforceLogIn(req, resp) == false) {    
+    console.log(req);
+    console.log('calling stripe', req.body, req.user);
+ 
+    create_customer(function () {return resp.redirect('/volume-1/tracks.html');});
+    /* buy_volume('cus_HCK6Wijfn26KY8', 24, 
+               function () {
+                 // TODO record purchase
+                 return resp.redirect('/volume-1/tracks.html');
+               });
+    */
+  } else {
+    throw("User not logged in");
+  }
+});
+
+app.get('/purchase_volume', function (req, resp) {
+  console.log("purchased volume");     
+  if (req.user) {
+    var client = mysql.createClient({
+      user: 'root',
+      password: 'pass',
+    });
+
+    client.useDatabase('ball_of_wax', function (err, db_res) {
+      if (err) {
+        console.error(err);
+      } else {
+        userdb.create_user(client, req.user, function (err, db_res) {
+          if (err) {
+            console.error('Error', err);
+          } else {
+            console.log('insert id', db_res.insertId);
+            purchasedb.create_purchase(client, req.user, 25, function (err, db_res) {
+                                        if (err) console.error(err);
+            });
+          }
+          
+        });
+      }p
+    });
+  }
+  resp.end();
+});
+
+
+// protected mp3 streams '/play/volume/:vol/:track'
+  app.use(function (req, resp, next) {
+    if (req.path.indexOf('/play') != 0) {
+      return next();
+    }
+    var redirect = function (req, resp) {
+      console.log("Redirecting");
+      return resp.redirect('/licensing/pay.html');
+    };
+    if (browserid.enforceLogIn(req, resp)) {
+      // TODO force login screen
+      return; //enforeLogIn redirected
+    }
+    var conn = mysql.createClient({
+      user: 'root',
+      password: 'pass',
+    });
+
+    conn.useDatabase('ball_of_wax', function (err, db_res) {
+      if (err) {  
+/*        console.error(err);
+        return redirect(req, resp);
+*/
+        return next(err);
+      } else {
+        console.log(req.url);
+        var l = '/play/volume-'.length;
+        var vol = parseInt(req.url.slice(l));
+        console.log(vol);
+        console.log('User is ', req.user);
+        purchasedb.can_play(conn, req.user, vol, function (err, canPlay) {
+          if (err) {
+/*            console.error(err); 
+            // TODO 403 access denied
+            return resp.send('Access Denied', 403);
+*/
+            return next(err);
+          } else {
+            // stream vol track
+            if (canPlay) {
+              console.log("All clear kid, play away");
+              return next();
+            } else {
+              console.log("Access Denied, son");
+              return resp.send('Access Denied', 403);
+            }
+          }
+        });//can_play
+      } // if err
+    }); // useDatabase
+  });
+
+
+  app.use(express.static(path.join(__dirname, '..', '/mp3s')));
 
 // Auth
 
-*/
 // Startup
 app.listen(3099);
 console.log(app.address());

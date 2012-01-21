@@ -21,10 +21,35 @@
     volume to support the production of the Ball of Wax Audio Quarterly.</p>
     <h2>Volume 25</h2>
     <p>Price: $5</p>
-    <div data-role="controlgroup" data-type="horizontal">
+    <!-- payment info -->
+    <form action="/add-payment-method" method="POST" id="payment-form">
+        <div class="payment-errors"></div>
+        <div class="form-row">
+            <label>Card Number</label>
+            <input type="text" size="20" autocomplete="off" class="card-number" />
+        </div>
+        <div class="form-row">
+            <label>CVC</label>
+            <input type="text" size="4" autocomplete="off" class="card-cvc" />                   
+        </div>
+        <div class="form-row">
+            <label>Expiration (MM/YYYY)</label>
+            <input type="text" size="2" class="card-expiry-month" />
+            <span> / </span>
+            <input type="text" size="4" class="card-expiry-year" />
+        </div>
+        <button type="submit" class="submit-button">Submit Payment</button>
+    </form>
+    <!-- /payment info -->
+    <div id="pay-step1-group" data-role="controlgroup" data-type="horizontal">
       <a href="" data-rel="back" data-role="button">Cancel</a>
-      <a href="" data-role="button">Pay Now</a>
+      <a id="pay-now-btn" href="" data-role="button">Pay Now</a>
     </div>
+  <script type="text/javascript" src="https://js.stripe.com/v1/"></script>
+<script>
+
+</script>
+
   </div><!-- /content -->
 
 </div><!-- /page -->
