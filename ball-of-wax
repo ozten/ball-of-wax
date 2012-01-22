@@ -11,7 +11,8 @@ var express = require('express'),
     conf = require('./config'),
     db = require('./lib/db'),
     userdb = require('./lib/userdb'),
-    purchasedb = require('./lib/purchases');
+    purchasedb = require('./lib/purchases'),
+    routes = require('./lib/routes');
 
 var stripe = require('stripe')(conf.stripe_sekrit);
 
@@ -48,7 +49,7 @@ app.configure('production', function(){
 });
 
 app.configure(function(){
-  app.set('views', __dirname);
+  app.set('views', path.join(__dirname, 'lib', 'views'));
   app.set('view engine', 'ejs');
   app.use(express.bodyParser());
   app.use(express.logger());
@@ -89,6 +90,10 @@ app.dynamicHelpers({
 app.post('/auth', browserid.auth({ next: '/register' }));
 
 app.get('/logout', browserid.logout({ next: '/' }));
+
+app.get('/', routes.home);
+
+app.get(/volume-([0-9]*)\/?$/, routes.volume);
 
 /*
   app.get('/get_user', function (req, resp, next) {

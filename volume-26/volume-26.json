@@ -1,7 +1,7 @@
 {
-  title: "Ball of Wax Volume 26",
-  subtitle: "A Tribute to the Anthology of American Folk Music",
-  tracks: [
+  "title": "Ball of Wax Volume 26",
+  "subtitle": "A Tribute to the Anthology of American Folk Music",
+  "tracks": [
     "Virgin of the Birds - Fatal Flower Garden",
     "01_Fatal_Flower_Garden.html",
     "01_Fatal_Flower_Garden.mp3",
@@ -74,7 +74,7 @@
     "18_Dog_and_Gun.html",
     "18_Dog_and_Gun.mp3",
 
-    "The Wringers - West Virginia Gals"
+    "The Wringers - West Virginia Gals",
     "19_West_Virginia_Gals.html",
     "19_West_Virginia_Gals.mp3"
   ]

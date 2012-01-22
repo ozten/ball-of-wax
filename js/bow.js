@@ -1,7 +1,7 @@
 $(document).ready(function () {
   window.User = {
     email: null,    /* Logged in via BrowserID? */
-    hasPayment: true     /* Stripe payment method exists?*/
+    hasPayment: false     /* Stripe payment method exists?*/
   };
   $(document).bind('orientationchange', function (e) {
     $.get('orientationchange');
@@ -47,7 +47,7 @@ $(document).ready(function () {
     // TODO if we aren't logged in, login
     // else if we aren't authorized, pay
     // else setMedia
-  };
+  });
 
   // tracks hardcoded play with jplayer
     $("#jquery_jplayer_1").jPlayer({
