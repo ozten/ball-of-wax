@@ -95,6 +95,10 @@ app.get('/', routes.home);
 
 app.get(/volume-([0-9]*)\/?$/, routes.volume);
 
+app.get(/volume-([0-9]*)\/tracks\/?$/, routes.tracks);
+
+app.get(/volume-([0-9]*)\/overview\/?$/, routes.overview);
+
 /*
   app.get('/get_user', function (req, resp, next) {
     var conn = mysql.createClient({
