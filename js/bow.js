@@ -1,8 +1,5 @@
 $(document).ready(function () {
-  window.User = {
-    email: null,    /* Logged in via BrowserID? */
-    hasPayment: false     /* Stripe payment method exists?*/
-  };
+  
   $(document).bind('orientationchange', function (e) {
     $.get('orientationchange');
   });
@@ -10,9 +7,7 @@ $(document).ready(function () {
     if (window.email)
       $('.email-address').text(window.email);
   });
-/*  $('#track-view').live('swipe', function (e, b, c) {
-    alert('swipe ' + b + ' ' + c);
-  });*/
+
   $('#track-view').live('swipeleft', function (e, b, c) {
     //alert('swipeleft ' + b + ' ' + c);
     $('#track-nav > li.active').next().find('a').click();
@@ -99,7 +94,37 @@ $(document).ready(function () {
     }
   });
 
+  /******************************** mp3 Auth *****************************/
+  window.User = {
+    email: null,    /* Logged in via BrowserID? */
+    hasPayment: false,     /* Stripe payment method exists?*/
+    vol_auth: []
+  };
 
+  // States - anonymous -> authenticated -> authorized
+  //                                    \-> un-authorzed
+  // licensing/pay dialog will walk you through these steps
+  // Once your authorized, jplayer.setMedia and play are triggered
+  // Cover jplayer with a click handler?
+
+  $('#jp_interface_1').top()
+  $('#mp3-auth').click(function (e) {
+    e.preventDefault();
+    var vol_num = parseInt($('h1').attr('data-volume-num');
+    if (User.email == null ||
+        ! User.vol_auth[vol_num]) {
+      $.ajax('/can/play/volume-' + vol_num, {
+        success: function (data, status, jqXhr) {
+        
+        }
+      });
+    } else {
+      // User should be authorized...
+      $($('.jp-play').get(0)).trigger('click');
+    }
+    return false;
+  });
+  /******************************** end mp3 Auth *****************************/
 
   /******************************** stripe *******************************/
   /******* First time, needs payment method */
