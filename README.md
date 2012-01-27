@@ -1,4 +1,6 @@
+[] Format mp3s with 01 instead of 1
 [] Push email address and logged in state into page
+* logout
 [] Figure out Play buttons
 * 403 -> login -> pay -> replay?
 [] if customer id is on hand, pay now should charge card

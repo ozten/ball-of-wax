@@ -10,7 +10,8 @@ $(document).ready(function () {
 
   $('#track-view').live('swipeleft', function (e, b, c) {
     //alert('swipeleft ' + b + ' ' + c);
-    $('#track-nav > li.active').next().find('a').click();
+    $('#track-nav > li.active').next().find('a').click();    
+    $("#jquery_jplayer_1").jPlayer('setMedia', {mp3: '/play/volume-26/01_Fatal_Flower_Garden.mp3'});
   });
   $('#track-view').live('swiperight', function (e, b, c) {
     //alert('swiperight ' + b + ' ' + c);
@@ -20,18 +21,17 @@ $(document).ready(function () {
   // Every page, Play Tracks clicked -> requires log in
   $('.browser-id').live('click', function (e) {
     e.preventDefault();
+    $(this).hide();
+    $('#login-progress').show();
     navigator.id.get(function(assertion) {
       if (assertion) {
         $.post("/auth", {assertion: assertion}, function(res) {
           if (res.status && res.status == "okay") {
-            window.email = res.email;
+            User.email = res.email;
             $('.email-address').text(window.email);
-            //alert("now you're logged in as: " + res.email);
-            $('#login-p').dialog('close');
-            // TODO check with mp3 server for ownership
-            setTimeout(function () {
-              $.mobile.changePage('/licensing/pay.html', {role: 'dialog'});
-            }, 1000);
+            var vol_num = parseInt($('h1').attr('data-volume-num'), 10);
+            $('.ui-dialog').dialog('close');
+            checkAuth(vol_num);
           }
         });
       }
@@ -66,7 +66,11 @@ $(document).ready(function () {
   $('#track-nav li a').click(function (e) {
     e.preventDefault();
     $(this).parent().parent().find('.active').removeClass('active');
-    var url = $(this).attr('href');
+    var url = $(this).attr('href'),
+        mp3url = $(this).attr('data-track');
+    if (mp3url) {
+      $("#jquery_jplayer_1").jPlayer('setMedia', {mp3: mp3url});
+}
     $(this).parent().addClass('active');
     $('#track-view').load(url);
   });
@@ -75,8 +79,7 @@ $(document).ready(function () {
   $('#pay-now-btn').live('click', function (e) {
     e.preventDefault();
     if (User.hasPayment) {
-       // TODO 26 hardcoded
-      $.ajax('/purchase_volume/26', {
+      $.ajax('/purchase_volume/' + volumeNumber(), {
         type: 'POST',
         dataType: 'json',
         error: function (data, status, jqXhr) {
@@ -84,8 +87,7 @@ $(document).ready(function () {
           alert(data.error);
         },
         success: function (data, status, jqXhr) {
-          // TODO
-          dialog.close();
+          playCurrent();
         }
       });
     } else {
@@ -95,32 +97,57 @@ $(document).ready(function () {
   });
 
   /******************************** mp3 Auth *****************************/
+  function volumeNumber () {
+    //TODO - make sure this works on all pages
+    return parseInt($('h1').attr('data-volume-num'), 10);
+  };
   window.User = {
     email: null,    /* Logged in via BrowserID? */
     hasPayment: false,     /* Stripe payment method exists?*/
-    vol_auth: []
+    vol_auth: {}
   };
+  function checkAuth (vol_num) {
+    $.ajax('/can/play/volume-' + vol_num, {
+        success: function (data, status, jqXhr) {
+          if (data.email == null) {
+            $.mobile.changePage('/licensing/login', {role: 'dialog'});
+            // Wire up navigator.id callback, redo can/play/volume call
+          } else {
+            User.email = data.email;
+            User.vol_auth = data.volumes;
+            if (data.can_play == false) {
+              $.mobile.changePage('/licensing/pay.html', {role: 'dialog'});
+              // Wire up pay hooks
+            } else {
+              // User should be authorized...
+              playCurrent();
+            }
+          }
+        }
+      });
+  }; //checkAuth
 
+  function playCurrent () {
+      $('.ui-dialog').dialog('close');
+      // TODO Once your authorized, jplayer.setMedia and play are triggered
+      // Cover jplayer with a click handler?
+      $($('.jp-play').get(0)).trigger('click');
+  };
   // States - anonymous -> authenticated -> authorized
   //                                    \-> un-authorzed
   // licensing/pay dialog will walk you through these steps
-  // Once your authorized, jplayer.setMedia and play are triggered
-  // Cover jplayer with a click handler?
 
-  $('#jp_interface_1').top()
+  
   $('#mp3-auth').click(function (e) {
     e.preventDefault();
-    var vol_num = parseInt($('h1').attr('data-volume-num');
+    var vol_num = volumeNumber();
     if (User.email == null ||
-        ! User.vol_auth[vol_num]) {
-      $.ajax('/can/play/volume-' + vol_num, {
-        success: function (data, status, jqXhr) {
-        
-        }
-      });
+        ! User.vol_auth['' + vol_num]) {
+      // TODO make ejs 
+      checkAuth(vol_num);
     } else {
       // User should be authorized...
-      $($('.jp-play').get(0)).trigger('click');
+      playCurrent();
     }
     return false;
   });
@@ -153,12 +180,25 @@ $(document).ready(function () {
         var form$ = $("#payment-form");
         // token contains id, last4, and card type
         var token = response['id'];
-        console.log('setting up ', token, ' into ', form$);
         // insert the token into the form so it gets submitted to the server
         form$.append("<input type='hidden' name='stripeToken' value='" + token + "'/>");
         // and submit
         //TODO ajax, returning set User.hasPayment = true;
-        form$.get(0).submit();
+        $.ajax(form$.attr('action'), {
+               type: 'POST',
+               dataType: 'json',
+               data: {
+                 volume: volumeNumber(),
+                 stripeToken: token
+               },
+               success: function (data, status, jqXhr) {
+                 playCurrent();                   
+                },
+               error: function (data, status, jqXhr) {
+                 $(".payment-errors").html("Unknown Error, please try again later.");
+               }
+        });
+
     }
   }
   /******* end First time, needs payment method */

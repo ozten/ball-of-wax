@@ -1,5 +1,6 @@
 config.js
 *.mp3
+cover.jpg
 *~
 *#*
 node_modules

@@ -118,3 +118,8 @@ div[data-role=content] ol {
 #payment-form {
   display: none;
 }
+/* Player */
+#jp_interface_1 {
+  position: absolute;
+  left: 3000px;
+}

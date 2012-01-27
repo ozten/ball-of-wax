@@ -93,11 +93,18 @@ app.get('/logout', browserid.logout({ next: '/' }));
 
 app.get('/', routes.home);
 
-app.get(/volume-([0-9]*)\/?$/, routes.volume);
+app.get(/^\/volume-([0-9]*)\/?$/, routes.volume);
 
-app.get(/volume-([0-9]*)\/tracks\/?$/, routes.tracks);
+app.get(/^\/volume-([0-9]*)\/tracks\/?$/, routes.tracks);
 
-app.get(/volume-([0-9]*)\/overview\/?$/, routes.overview);
+app.get(/^\/volume-([0-9]*)\/overview\/?$/, routes.overview);
+
+app.get('/can/play/volume-:vol', routes.can_play_volume);
+app.get('/licensing/login', function (req, resp) {
+  resp.render('login', {title: 'Login'});
+});
+
+app.get('/licensing/pay', routes.pay);
 
 /*
   app.get('/get_user', function (req, resp, next) {
@@ -122,7 +129,7 @@ app.get(/volume-([0-9]*)\/overview\/?$/, routes.overview);
   });
 */
 
-app.get('/can/:vol', function (req, resp) {
+app.get('/xcan/:vol', function (req, resp) {
 
   var conn = mysql.createClient({
       user: 'root',
@@ -173,16 +180,13 @@ function buy_volume(conn, email, customer_id, vol_number, cb) {
   };//buy volume
 
 app.post('/add-payment-method', function (req, resp) {
-  var vol_number = 25; // TODO should be dynamic
+  var vol_number = request.body['volume']; // TODO should be dynamic
   var email = req.user;
 
-/* TODO Does user exist?
-      userdb.create_user(client, req.user, function (err, db_res) {
-          if (err) {
-            console.error('Error', err);
-          } else {
-            console.log('insert id', db_res.insertId);
-*/
+  console.log('params', req.params);
+  console.log('body', req.params);
+
+/* TODO Does user exist? */
 
   function create_customer_purchase_volume (conn, cb) {
     var data = { email: req.user, card: req.body['stripeToken'] };
@@ -226,7 +230,9 @@ app.post('/add-payment-method', function (req, resp) {
                    user.customer_id, 
                    vol_number,
                    // Redirect ... nah... make AJAX
-                   function () {return resp.redirect('/volume-1/tracks.html');}
+                   function () {
+                     return resp.send('{}', {'Content-Type': 'application/json'});
+                   }
         );
       } else {
         console.log('customer id is null, creating customer in stripe', user);
