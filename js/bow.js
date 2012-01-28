@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  
+
   $(document).bind('orientationchange', function (e) {
     $.get('orientationchange');
   });
@@ -10,7 +10,7 @@ $(document).ready(function () {
 
   $('#track-view').live('swipeleft', function (e, b, c) {
     //alert('swipeleft ' + b + ' ' + c);
-    $('#track-nav > li.active').next().find('a').click();    
+    $('#track-nav > li.active').next().find('a').click();
     $("#jquery_jplayer_1").jPlayer('setMedia', {mp3: '/play/volume-26/01_Fatal_Flower_Garden.mp3'});
   });
   $('#track-view').live('swiperight', function (e, b, c) {
@@ -116,7 +116,7 @@ $(document).ready(function () {
             User.email = data.email;
             User.vol_auth = data.volumes;
             if (data.can_play == false) {
-              $.mobile.changePage('/licensing/pay.html', {role: 'dialog'});
+              $.mobile.changePage('/licensing/pay/' + volumeNumber(), {role: 'dialog'});
               // Wire up pay hooks
             } else {
               // User should be authorized...
@@ -137,13 +137,13 @@ $(document).ready(function () {
   //                                    \-> un-authorzed
   // licensing/pay dialog will walk you through these steps
 
-  
+
   $('#mp3-auth').click(function (e) {
     e.preventDefault();
     var vol_num = volumeNumber();
     if (User.email == null ||
         ! User.vol_auth['' + vol_num]) {
-      // TODO make ejs 
+      // TODO make ejs
       checkAuth(vol_num);
     } else {
       // User should be authorized...
@@ -192,7 +192,7 @@ $(document).ready(function () {
                  stripeToken: token
                },
                success: function (data, status, jqXhr) {
-                 playCurrent();                   
+                 playCurrent();
                 },
                error: function (data, status, jqXhr) {
                  $(".payment-errors").html("Unknown Error, please try again later.");
@@ -203,7 +203,21 @@ $(document).ready(function () {
   }
   /******* end First time, needs payment method */
   /******* returning customer */
-
+  $('#pay-now-btn').live('click', function (e) {
+    e.preventDefault();
+    $.ajax('/purchase_volume/' + $('#pay-volume-number').attr('data-volume-number'), {
+      type: 'POST',
+      dataType: 'json',
+      data: {},
+      success: function (data, status, jqXhr) {
+        playCurrent();
+      },
+      error: function (data, status, jqXhr) {
+        $(".payment-errors").html("Unknown Error, please try again later.");
+      }
+    });
+    return false;
+  });
   /******* end returning customer */
   /************************* end stripe ************************/
   //$.mobile.changePage('/licensing/pay.html', {role: 'dialog'});

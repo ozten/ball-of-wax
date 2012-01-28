@@ -27,7 +27,7 @@ app.configure('development', function(){
     if (req.path.indexOf('.css') == -1)
       return next();
 
-    // lessc used with @import don't see changes... 
+    // lessc used with @import don't see changes...
     // nuking stylo.css will force a re-compile
     fs.readdirSync(path.join(__dirname, 'css/')).forEach(function (f, i) {
       if (f.indexOf('.css') != -1) {
@@ -104,7 +104,7 @@ app.get('/licensing/login', function (req, resp) {
   resp.render('login', {title: 'Login'});
 });
 
-app.get('/licensing/pay', routes.pay);
+app.get('/licensing/pay/:volnum', routes.pay);
 
 /*
   app.get('/get_user', function (req, resp, next) {
@@ -169,8 +169,8 @@ function buy_volume(conn, email, customer_id, vol_number, cb) {
         } else {
           console.log('charge info', charge);
           console.log('recording in db', charge);
-          purchasedb.create_purchase(conn, email, 
-                                     vol_number, 
+          purchasedb.create_purchase(conn, email,
+                                     vol_number,
                                      function (err, db_res) {
                                        if (err) console.error(err);
                                        cb();
@@ -204,12 +204,12 @@ app.post('/add-payment-method', function (req, resp) {
             purchasedb.create_stripe_customer(conn,
                                               req.user,
                                               customer.id);
-            buy_volume(conn, email, customer.id, vol_number, cb); 
+            buy_volume(conn, email, customer.id, vol_number, cb);
         }
       }); // customer create
   }//create_customer_purchase_volume
 
-  
+
 
     console.log('add-payment-method running');
     if (browserid.enforceLogIn(req, resp) == false) {
@@ -227,7 +227,7 @@ app.post('/add-payment-method', function (req, resp) {
         console.log('We have a customer id ', user);
         buy_volume(conn,
                    email,
-                   user.customer_id, 
+                   user.customer_id,
                    vol_number,
                    // Redirect ... nah... make AJAX
                    function () {
@@ -254,7 +254,7 @@ app.post('/add-payment-method', function (req, resp) {
 app.post('/purchase_volume/:vol', function (req, resp) {
   if (browserid.enforceLogIn(req, resp)) {
     return;
-  } 
+  }
   var vol_number = req.params.vol;
   console.log("purchased volume", vol_number);
 
@@ -264,19 +264,23 @@ app.post('/purchase_volume/:vol', function (req, resp) {
       return resp.send(err, 500);
     }
     userdb.get_user(conn, req.user, function (err, user) {
-      buy_volume(conn, user.email, user.customer_id, vol_number, 
+      if (err) {
+        console.error(err);
+        return resp.send(err, 500);
+      }
+      console.log('Purchasing volume');
+      buy_volume(conn, user.email, user.customer_id, vol_number,
                  function (err) {
         if (err) {
           console.error(err);
           resp.send('{error: "Error Purchasing Volume"}', 500);
         } else {
-          resp.set
           resp.send('{}', {
-            'Content-Type': 'application/json' 
+            'Content-Type': 'application/json'
           });
         }
       });
-                                        
+
     });//get_user
 
   });//withDb
@@ -289,7 +293,7 @@ app.post('/purchase_volume/:vol', function (req, resp) {
     }
     var redirect = function (req, resp) {
       console.log("Redirecting");
-      return resp.redirect('/licensing/pay.html');
+      return resp.redirect('/licensing/pay');
     };
     if (browserid.enforceLogIn(req, resp)) {
       // TODO force login screen
