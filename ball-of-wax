@@ -106,7 +106,7 @@ app.get('/licensing/pay/:volnum', routes.pay);
   app.get('/get_user', function (req, resp, next) {
     var conn = mysql.createClient({
       user: 'root',
-      password: 'pass',
+      password: conf.db_password,
     });
 
     conn.useDatabase('ball_of_wax', function (err, db_res) {
@@ -128,8 +128,8 @@ app.get('/licensing/pay/:volnum', routes.pay);
 app.get('/xcan/:vol', function (req, resp) {
 
   var conn = mysql.createClient({
-      user: 'root',
-      password: 'pass',
+      user: conf.db_user,
+      password: conf.db_password,
   });
 
   conn.useDatabase('ball_of_wax', function (err, db_res) {
@@ -228,7 +228,7 @@ app.post('/purchase_volume/:vol', function (req, resp) {
     }
     var conn = mysql.createClient({
       user: 'root',
-      password: 'pass',
+      password: conf.db_password,
     });
 
     conn.useDatabase('ball_of_wax', function (err, db_res) {

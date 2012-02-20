@@ -1,10 +1,14 @@
+[] Pay form formatting (CC, expiration, etc size)
+[] Payment form month year size
+[] put mp3s on s3
 [] Play from cataglog or volume should call setMedia...
 [] Format mp3s with 01 instead of 1
 [] Push email address and logged in state into page ?
 * logout ?
 [] Finish Play buttons
-[] Pay form formatting (CC, expiration, etc size)
+
 [] Finalize graphic design
+
 
 
 * Add jPlayer (http://www.jplayer.org/latest/developer-guide/)
