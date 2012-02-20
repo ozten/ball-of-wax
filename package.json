@@ -1,0 +1,25 @@
+{
+  "author": "Ozten <shout@ozten.com> (http://ozten.com)",
+  "name": "ball-of-wax",
+  "description": "Ball of Wax Audio Quarterly App",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ozten/ball-of-wax.git"
+  },
+  "main": "ball-of-wax",
+  "engines": {
+    "node": "~0.6.10"
+  },
+  "dependencies": {
+    "client-sessions": "0.0.3",
+    "connect-browserid": "git://github.com/ozten/connect-browserid",
+    "ejs": "0.6.1",
+    "express": "2.5.2",
+    "less": "1.2.0",
+    "mysql": "0.9.5",
+    "stripe": "1.0.0"    
+  },
+  "devDependencies": {},
+  "optionalDependencies": {}
+}
