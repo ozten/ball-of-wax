@@ -123,3 +123,6 @@ div[data-role=content] ol {
   position: absolute;
   left: 3000px;
 }
+#payment-form [data-role=fieldcontain] .ui-input-text {
+  width: auto;
+}
