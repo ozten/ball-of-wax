@@ -141,7 +141,7 @@ $(document).ready(function () {
   // licensing/pay dialog will walk you through these steps
 
 
-  $('#mp3-auth').click(function (e) {
+  $('#mp3-auth').live('click', function (e) {
     e.preventDefault();
     var vol_num = volumeNumber();
     if (User.email == null ||

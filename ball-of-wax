@@ -8,6 +8,7 @@ var express = require('express'),
     mysql = require('mysql'),
     path = require('path'),
 
+    catalog = require('./lib/catalog'),
     conf = require('./config'),
     db = require('./lib/db'),
     userdb = require('./lib/userdb'),
@@ -82,6 +83,7 @@ app.dynamicHelpers({
     return req.session;
   },
 });
+app.helpers(catalog);
 
 app.post('/auth', browserid.auth({ next: '/register' }));
 
@@ -264,7 +266,6 @@ app.post('/purchase_volume/:vol', function (req, resp) {
       } // if err
     }); // useDatabase
   });
-
 
   app.use(express.static(path.join(__dirname, '..', '/mp3s')));
 
