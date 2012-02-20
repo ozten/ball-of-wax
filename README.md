@@ -1,5 +1,4 @@
-[] Pay form formatting (CC, expiration, etc size)
-[] Payment form month year size
+[] zip files for import
 [] put mp3s on s3
 [] Play from cataglog or volume should call setMedia...
 [] Format mp3s with 01 instead of 1
