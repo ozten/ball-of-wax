@@ -3,7 +3,8 @@ $(document).ready(function () {
   $(document).bind('orientationchange', function (e) {
     $.get('orientationchange');
   });
-  $(document).bind('pageload', function (e) {
+  $(document).bind('pageload', function (e, page) {
+    $('#track-nav li a:first').click();  
     if (window.email)
       $('.email-address').text(window.email);
   });
@@ -63,7 +64,7 @@ $(document).ready(function () {
     });
 
   // /:volume/tracks landscape switch pages via navigation
-  $('#track-nav li a').click(function (e) {
+  $('#track-nav li a').live('click', function (e) {
     e.preventDefault();
     $(this).parent().parent().find('.active').removeClass('active');
     var url = $(this).attr('href'),
@@ -74,6 +75,8 @@ $(document).ready(function () {
     $(this).parent().addClass('active');
     $('#track-view').load(url);
   });
+
+  //TODO trigger this from after page load if the current page is aok
   $('#track-nav li a:first').click();
 
   $('#pay-now-btn').live('click', function (e) {

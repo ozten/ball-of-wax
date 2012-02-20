@@ -3,9 +3,9 @@
 var express = require('express'),
     //routes = require('./routes');
     browserid = require('connect-browserid'),
+    clientSessions = require("client-sessions"),
     fs = require('fs'),
     mysql = require('mysql'),
-    MySQLSessionStore = require('connect-mysql-session')(express)
     path = require('path'),
 
     conf = require('./config'),
@@ -55,14 +55,10 @@ app.configure(function(){
   app.use(express.logger());
   app.use(express.responseTime());
   app.use(express.methodOverride());
-  app.use(express.cookieParser());
-
-  app.use(express.session({
-    store: new MySQLSessionStore(conf.db_name,
-                                 conf.db_user, conf.db_password, {
-      checkExpirationInterval: conf.session_length
-    }),
-    secret: conf.session_sekrit
+  app.use(clientSessions({
+    cookieName: 'session_state',
+    secret: conf.session_sekrit,
+    duration: 24 * 60 * 60 * 1000 // 1 day
   }));
 
   app.use(browserid.authUser({ secret: conf.browserid_sekrit,
@@ -179,76 +175,7 @@ function buy_volume(conn, email, customer_id, vol_number, cb) {
     });
   };//buy volume
 
-app.post('/add-payment-method', function (req, resp) {
-  var vol_number = request.body['volume']; // TODO should be dynamic
-  var email = req.user;
-
-  console.log('params', req.params);
-  console.log('body', req.params);
-
-/* TODO Does user exist? */
-
-  function create_customer_purchase_volume (conn, cb) {
-    var data = { email: req.user, card: req.body['stripeToken'] };
-    console.log(data);
-    stripe.customers.create(data,
-      function (err, customer) {
-        console.log('customer create', err, customer);
-        if (err) {
-          console.log('error', err);
-          //TODO this dies...
-          //throw(err);
-          resp.send(err, 500);
-        } else {
-          console.log('customer info', customer);
-            purchasedb.create_stripe_customer(conn,
-                                              req.user,
-                                              customer.id);
-            buy_volume(conn, email, customer.id, vol_number, cb);
-        }
-      }); // customer create
-  }//create_customer_purchase_volume
-
-
-
-    console.log('add-payment-method running');
-    if (browserid.enforceLogIn(req, resp) == false) {
-    console.log(req);
-    console.log('calling stripe', req.body, req.user);
-
-  db.withDb(function (err, conn, db) {
-    userdb.get_user(conn, req.user, function (err, user) {
-      if (err)
-      {
-        console.error(err);
-        return resp.send(err, 500);
-      }
-      if (user.customer_id) {
-        console.log('We have a customer id ', user);
-        buy_volume(conn,
-                   email,
-                   user.customer_id,
-                   vol_number,
-                   // Redirect ... nah... make AJAX
-                   function () {
-                     return resp.send('{}', {'Content-Type': 'application/json'});
-                   }
-        );
-      } else {
-        console.log('customer id is null, creating customer in stripe', user);
-        // creates customer, saves to db, purchases tracks
-        create_customer_purchase_volume(conn,
-          // Redirect ... nah... make AJAX
-          function () {return resp.redirect('/volume-1/tracks.html');
-        });
-      }
-    });
-  });
-
-  } else {
-    throw("User not logged in");
-  }
-}); //add-payment-method
+app.post('/add-payment-method', routes.add_payment_method); //add-payment-method
 
 // user must exist and have payment info on file
 app.post('/purchase_volume/:vol', function (req, resp) {

@@ -1,12 +1,11 @@
+[] Play from cataglog or volume should call setMedia...
 [] Format mp3s with 01 instead of 1
-[] Push email address and logged in state into page
-* logout
-[] Figure out Play buttons
-* 403 -> login -> pay -> replay?
-[] if customer id is on hand, pay now should charge card
-[] Display Current payment info, if payment exists
+[] Push email address and logged in state into page ?
+* logout ?
+[] Finish Play buttons
 [] Pay form formatting (CC, expiration, etc size)
 [] Finalize graphic design
+
 
 * Add jPlayer (http://www.jplayer.org/latest/developer-guide/)
 * "Database" will be a set of zip files you email me with:
