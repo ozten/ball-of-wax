@@ -86,9 +86,9 @@ app.dynamicHelpers({
 });
 app.helpers(catalog);
 
-app.post('/auth', browserid.auth({ next: '/register' }));
+app.post('/auth', browserid.auth);
 
-app.get('/logout', browserid.logout({ next: '/' }));
+app.get('/logout', browserid.logout);
 
 app.get('/', routes.home);
 
