@@ -7,5 +7,5 @@ exports.stripe_sekrit = 'From Stripe Panel';
 exports.session_length = 1000 * 60 * 60 * 6; // 6 hour session
 exports.session_sekrit = 'Hobo LaRue, the most famous of hobos.';
 
-conf.browserid_sekrit = 'asdf asdf';
-conf.browserid_audience = 'http://192.168.186.138:3000';
+exports.browserid_sekrit = 'asdf asdf';
+exports.browserid_audience = 'http://192.168.186.138:3000';
