@@ -2,14 +2,16 @@
 
 var express = require('express'),
     //routes = require('./routes');
-    browserid = require('connect-browserid'),
+    conf = require('./config'),
+    browserid = require('connect-browserid').init({ secret: conf.browserid_sekrit,
+                               audience: conf.browserid_audience }),
     clientSessions = require("client-sessions"),
     fs = require('fs'),
     mysql = require('mysql'),
     path = require('path'),
 
     catalog = require('./lib/catalog'),
-    conf = require('./config'),
+
     db = require('./lib/db'),
     userdb = require('./lib/userdb'),
     purchasedb = require('./lib/purchases'),
@@ -62,8 +64,7 @@ app.configure(function(){
     duration: 24 * 60 * 60 * 1000 // 1 day
   }));
 
-  app.use(browserid.authUser({ secret: conf.browserid_sekrit,
-                               audience: conf.browserid_audience }));
+  app.use(browserid.authUser);
   app.use(app.router);
 
   app.use(express.static(__dirname));
